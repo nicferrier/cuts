@@ -1,0 +1,13 @@
+{
+  "name": "cuts",
+  "version": "1.0.0",
+  "description": "Common Unix Thing Server; do common unix things all the time.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Nic Ferrier, nic@ferrier.me.uk",
+  "license": "ISC"
+}
