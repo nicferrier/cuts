@@ -1,7 +1,10 @@
-const { spawn } = require("child_process");
-const path = require('path');
-const fs = require('fs');
-fs.promises = require('./fsasync.js').promises;
+const cuts = require("./cuts.js");
+
+const express = require("express");
+const indexer = require("serve-index");
+const http = require("http");
+
+const app = express();
 
 const things = {
     "du_of_home_dir": "du -h /home/nicferrier",
@@ -9,56 +12,30 @@ const things = {
     "uptime": "uptime"
 }
 
-Array.prototype.forEachAsync = async function (fn) {
-    for (let t of this) { await fn(t) }
-};
+const logDir = __dirname + "/logdir";
 
-function eventToHappen(eventFn) {
-    return new Promise((resolve, reject) => {
-        eventFn(resolve);
-    });
-}
-
-async function commonyQueue(logDir) {
-    let runDate = new Date();
-    let runDateStr = path.join(
-        logDir,
-        runDate.getFullYear()
-            + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2),
-        "" + runDate.getDate(),
-        ("0" + runDate.getHours()).substr(-2)
-            + ("0" + runDate.getMinutes()).substr(-2),
-        "placeholder"
-    );
-
-    let directory = path.dirname(runDateStr);
-    let dirParts = directory.split(path.sep);
-    async function mkdirRecur (mkdir, rest) {
-        await fs.promises.mkdir(mkdir).catch(e => console.log("error!", e));
-        if (rest.length > 0) {
-            let next = path.join(mkdir, rest[0]);
-            let nextRest = rest.slice(1);
-            await mkdirRecur(next, nextRest);
-        }
-    };
-
-    await mkdirRecur(dirParts[0], dirParts.slice(1));
-    Object.keys(things).forEach(async dirName => {
-        let fileName = path.join(path.dirname(runDateStr), dirName + ".txt");
-        let out = fs.createWriteStream(fileName);
-        let script = things[dirName];
-        child = spawn("/bin/bash", ["-c", script]);
-        child.stderr.pipe(out);
-        child.stdout.pipe(out);
-        let scriptEnd = proc => child.on("exit", proc);
-        await eventToHappen(scriptEnd);
-        out.end();
-    });
+async function cut() {
+    await cuts.commonyQueue(logDir, new Date(), things);
 }
 
 let minutes15 = 1000 * 60 * 15;
-//setInterval(commonyQueue, minutes15);
+setInterval(cut, minutes15);
 
-commonyQueue("logdir");
+exports.boot = function (port, options) {
+    let opts = options != undefined ? options : {};
+    let rootDir = opts.rootDir != undefined ? opts.rootDir : logDir;
+    let rootPath = opts.rootPath != undefined ? opts.rootPath : "/cuts";
+    let jsFile = opts.jsFile != undefined ? opts.jsFile : "/index.js";
+
+    app.use(rootPath,
+            express.static(rootDir),
+            indexer(rootDir, {'icons': true}));
+
+    let listener = app.listen(port, "localhost", async function () {
+        console.log("listening on ", listener.address().port);
+    });
+};
+
+exports.boot(8001);
 
 // End
