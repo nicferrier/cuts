@@ -19,6 +19,9 @@ async function cut(logDir, things) {
 
 exports.boot = function (port, options) {
     let opts = options != undefined ? options : {};
+
+    let defLogDir = __dirname + "/logdir";
+    let logDir = opts.logDir != undefined ? opts.logDir : defLogDir;
     let rootDir = opts.rootDir != undefined ? opts.rootDir : logDir;
     let rootPath = opts.rootPath != undefined ? opts.rootPath : "/cuts";
 
@@ -38,10 +41,8 @@ exports.boot = function (port, options) {
             listenerCallback(listener.address());
         }
 
-        let defLogDir = __dirname + "/logdir";
-        let logDir = opts.logDir != undefined ? opts.logDir : defLogDir;
         let minutes15 = 1000 * 60 * 15;
-        let runInterval = opts.runInterval != undefined ? opts.runInterval != undefined | minutes15;
+        let runInterval = opts.runInterval != undefined ? opts.runInterval != undefined : minutes15;
         let commands = opts.commands != undefined ? opts.commands : things;
         let cutFn = function () { cut(logDir, commands); };
         setInterval(cutFn, runInterval);
