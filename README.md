@@ -10,8 +10,8 @@ us know the result.
 ## Using as a server
 
 ```
-$ npm install -g cuts
-$ node cuts
+ $ npm install -g cuts
+ $ node cuts
 ```
 
 the server will present an HTTP interface and start doing some default
@@ -21,13 +21,14 @@ commands every 15 minutes.
 ## Use as a module
 
 ```
-npm install cuts
+ $ npm install cuts
 ```
 
 You can write a module which will make the server available and
 heavily customize it:
 
 ```
+
 const cutsServer = require("cuts");
 
 cutsServer.boot(8001, {
@@ -55,6 +56,7 @@ cutsServer.boot(8001, {
 An example commands:
 
 ```
+
 { "du_of_home_dir": "du -h ~/",
   "disc_free": "df -h",
   "uptime": "uptime"
