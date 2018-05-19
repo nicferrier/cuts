@@ -27,7 +27,7 @@ commands every 15 minutes.
 You can write a module which will make the server available and
 heavily customize it:
 
-```
+```javascript
 
 const cutsServer = require("cuts");
 
