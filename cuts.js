@@ -15,8 +15,8 @@ function eventToHappen(eventFn) {
 
 const dirSplit = new RegExp("([0-9]{4})-([0-9]{2})");
 
-exports.commonyQueue = async function(logDir, runDate, things) {
-    console.log("cut", runDate, things);
+exports.commonyQueue = async function(logDir, runDate, app) {
+    console.log("cut", runDate, app.commands);
     
     let yearMonthStr = runDate.getFullYear()
         + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2);
@@ -41,7 +41,7 @@ exports.commonyQueue = async function(logDir, runDate, things) {
             let [_, yearStr, monthStr] = dirSplit.exec(entry);
             let dirDate = parseInt(yearStr + monthStr);
             let dateLine = dirDate - 3;
-            console.log("run date", runDate, "date line", dateLine);
+            console.log("run date", runDate, "dirDate", dirDate, "date line", dateLine);
             if (dirDate > dateLine - 3) {
                 console.log(runDate, "old directory", entry, "to be removed");
 
@@ -72,10 +72,10 @@ exports.commonyQueue = async function(logDir, runDate, things) {
     };
     await mkdirRecur(dirParts[0], dirParts.slice(1));
 
-    await Object.keys(things).forEachAsync(async dirName => {
+    await Object.keys(app.commands).forEachAsync(async dirName => {
         let fileName = path.join(path.dirname(runDateStr), dirName + ".txt");
         let out = fs.createWriteStream(fileName);
-        let script = things[dirName];
+        let script = app.commands[dirName];
         console.log("run ", runDate, "doing ", script);
         let child = spawn("/bin/bash", ["-c", script]);
         child.stderr.pipe(out);
@@ -84,6 +84,8 @@ exports.commonyQueue = async function(logDir, runDate, things) {
         await eventToHappen(scriptEnd);
         out.end();
     });
+
+    app.lastRunDir = directory;
 };
 
 // cuts ends here

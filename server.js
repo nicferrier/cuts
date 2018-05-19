@@ -12,11 +12,6 @@ const things = {
     "uptime": "uptime"
 }
 
-async function cut(logDir, things) {
-    await cuts.commonyQueue(logDir, new Date(), things);
-}
-
-
 exports.boot = function (port, options) {
     let opts = options != undefined ? options : {};
 
@@ -42,9 +37,14 @@ exports.boot = function (port, options) {
         }
 
         let minutes15 = 1000 * 60 * 15;
-        let runInterval = opts.runInterval != undefined ? opts.runInterval != undefined : minutes15;
+        let runInterval = opts.runInterval != undefined ? opts.runInterval : minutes15;
         let commands = opts.commands != undefined ? opts.commands : things;
-        let cutFn = function () { cut(logDir, commands); };
+        app.commands = commands;
+        
+        let cutFn = async function () {
+            await cuts.commonyQueue(logDir, new Date(), app);
+        };
+
         setInterval(cutFn, runInterval);
 
         console.log("listening on ", listener.address().port);
