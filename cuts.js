@@ -16,7 +16,7 @@ function eventToHappen(eventFn) {
 const dirSplit = new RegExp("([0-9]{4})-([0-9]{2})");
 
 exports.commonyQueue = async function(logDir, runDate, app) {
-    console.log("cut", runDate, app.commands);
+    // console.log("cut", runDate, app.commands);
     
     let yearMonthStr = runDate.getFullYear()
         + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2);
@@ -30,19 +30,19 @@ exports.commonyQueue = async function(logDir, runDate, app) {
         "placeholder"
     );
 
-    console.log("runDateStr", runDateStr);
+    // console.log("runDateStr", runDateStr);
 
     let todayDate = parseInt(yearMonthStr);
     let listing = await fs.promises.readdir(logDir)
         .catch(e => e.code=="ENOENT" ? null : e);
-    console.log("listing", listing);
+    // console.log("listing", listing);
     if (listing instanceof Array) {
         await listing.forEachAsync(async entry => {
             let [_, yearStr, monthStr] = dirSplit.exec(entry);
             let dirDate = parseInt(yearStr + monthStr);
             let dateLine = dirDate - 3;
-            console.log("run date", runDate, "dirDate", dirDate, "date line", dateLine);
-            if (dirDate > dateLine - 3) {
+            // console.log("run date", runDate, "dirDate", dirDate, "date line", dateLine);
+            if (dirDate - 3 < dateLine) {
                 console.log(runDate, "old directory", entry, "to be removed");
 
                 let fileName = path.join(logDir, entry);
@@ -57,11 +57,11 @@ exports.commonyQueue = async function(logDir, runDate, app) {
 
     let directory = path.dirname(runDateStr);
     let dirParts = directory.split(path.sep);
-    console.log("dirParts", dirParts, directory);
+    // console.log("dirParts", dirParts, directory);
 
     async function mkdirRecur (mkdir, rest) {
         mkdir = mkdir == "" ? "/" : mkdir;
-        console.log("mkdir", mkdir, rest);
+        // console.log("mkdir", mkdir, rest);
         await fs.promises.mkdir(mkdir)
             .catch(e => e.code=="EEXIST" ? null : e);
         if (rest.length > 0) {

@@ -50,4 +50,17 @@ async function test () {
 
 test();
 
+
+
+// async function testPs () {
+//     let script = "ps wajx | grep node";
+//     let child = spawn("/bin/bash", ["-c", script]);
+//     let scriptEnd = proc => child.on("exit", proc);
+//     child.stderr.pipe(process.stdout);
+//     child.stdout.pipe(process.stdout);
+//     await eventToHappen(scriptEnd).catch(e => console.log("error", e));
+// }
+
+// testPs();
+
 // Tests end here

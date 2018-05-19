@@ -4,9 +4,9 @@ cutsServer.boot(8001, {
     commands: {
         df: "df -h",
         du_home: "du -h ~/",
-        node_processes: "ps ajx | grep node"
+        node_processes: "ps wajx | awk '/[n]ode/'"
     },
-    runInterval: 1000 * 30,
+    runInterval: 1000 * 60 * 5,
     appCallback: function (app) {
         app.set('json spaces', 2);
         app.get("/service-status", (req, res) => {
