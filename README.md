@@ -43,6 +43,10 @@ cutsServer.boot(8001, {
 });
 ```
 
+Included in the repository is demo.js which is an example server with
+cuts as a module.
+
+
 ### Options to pass to boot
 
 * runInterval - the time in seconds to run the commands
