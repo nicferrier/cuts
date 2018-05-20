@@ -61,7 +61,8 @@ An example commands:
 
 ```
 
-{ "du_of_home_dir": "du -h ~/",
+{ 
+  "du_of_home_dir": "du -h ~/",
   "disc_free": "df -h",
   "uptime": "uptime"
   }
