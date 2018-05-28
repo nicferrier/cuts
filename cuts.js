@@ -17,6 +17,7 @@ const dirSplit = new RegExp("([0-9]{4})-([0-9]{2})");
 
 exports.commonyQueue = async function(logDir, runDate, app) {
     // console.log("cut", runDate, app.commands);
+    let shell = app.shell == undefined ? "bash" : app.shell;
     
     let yearMonthStr = runDate.getFullYear()
         + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2);
@@ -77,7 +78,7 @@ exports.commonyQueue = async function(logDir, runDate, app) {
         let out = fs.createWriteStream(fileName);
         let script = app.commands[dirName];
         console.log("run ", runDate, "doing ", script);
-        let child = spawn("/bin/bash", ["-c", script]);
+        let child = spawn(shell, ["-c", script]);
         child.stderr.pipe(out);
         child.stdout.pipe(out);
         let scriptEnd = proc => child.on("exit", proc);

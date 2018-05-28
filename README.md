@@ -49,11 +49,12 @@ cuts as a module.
 
 ### Options to pass to boot
 
-* runInterval - the time in seconds to run the commands
-* appCallback - a function, called with the express app so you can configure routes
-* listenerCallback - a function, called with the listener address so you can enquire of the listener
-* logDir - a string indicating the path of the log directory where the output of the commands is collected; by default this is "logdir"
-* commands - an object describing the keys to run
+* runInterval - the time in seconds to run the commands.
+* appCallback - a function, called with the express app so you can configure routes.
+* listenerCallback - a function, called with the listener address so you can enquire of the listener.
+* logDir - a string indicating the path of the log directory where the output of the commands is collected; by default this is "logdir".
+* commands - an object describing the keys to run.
+* shell - a name to exec (either a bare name or a full filename) of the shell to use; bash by default.
 
 ### commands
 
