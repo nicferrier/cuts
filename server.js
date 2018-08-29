@@ -19,6 +19,7 @@ exports.boot = function (port, options) {
     let logDir = opts.logDir != undefined ? opts.logDir : defLogDir;
     let rootDir = opts.rootDir != undefined ? opts.rootDir : logDir;
     let rootPath = opts.rootPath != undefined ? opts.rootPath : "/cuts";
+    let interface = opts.interface != undefined ? opts.interface : "localhost";
 
     app.use(rootPath,
             express.static(rootDir),
@@ -30,7 +31,7 @@ exports.boot = function (port, options) {
         appCallback(app);
     }
 
-    let listener = app.listen(port, "localhost", async function () {
+    let listener = app.listen(port, interface, async function () {
         let listenerCallback = opts.listenerCallback;
         if (typeof(listenerCallback) === "function") {
             listenerCallback(listener.address());
