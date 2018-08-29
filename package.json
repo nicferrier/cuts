@@ -1,6 +1,6 @@
 {
     "name": "cuts",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Common Unix Thing Server; do common unix things all the time.",
     "main": "server.js",
     "scripts": {
@@ -8,8 +8,8 @@
         "start": "node server.js"
     },
     "dependencies": {
-        "express": "4.14.0",
-        "serve-index": "1.8.0"
+        "express": "^4.16.3",
+        "serve-index": "^1.9.1"
     },
     "keywords": [],
     "author": "Nic Ferrier, nic@ferrier.me.uk",
