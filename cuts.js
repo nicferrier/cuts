@@ -13,37 +13,38 @@ function eventToHappen(eventFn) {
     });
 }
 
-const dirSplit = new RegExp("([0-9]{4})-([0-9]{2})");
+const dirSplit = new RegExp("([0-9]{4})-([0-9]{2})-([0-9]{2})");
 
 exports.commonyQueue = async function(logDir, runDate, app) {
     // console.log("cut", runDate, app.commands);
     let shell = app.shell == undefined ? "bash" : app.shell;
-    
-    let yearMonthStr = runDate.getFullYear()
-        + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2);
+
+    let yearMonthDayStr = runDate.getFullYear()
+        + "-" + ("0" + (runDate.getMonth() + 1)).substr(-2)
+        + "-" + ("0" + (runDate.getDate())).substr(-2);
 
     let runDateStr = path.join(
         logDir,
-        yearMonthStr,
+        yearMonthDayStr,
         "" + runDate.getDate(),
         ("0" + runDate.getHours()).substr(-2)
-            + ("0" + runDate.getMinutes()).substr(-2),
+        + ("0" + runDate.getMinutes()).substr(-2),
         "placeholder"
     );
 
     // console.log("runDateStr", runDateStr);
 
-    let todayDate = parseInt(yearMonthStr);
+    let todayDate = parseInt(yearMonthDayStr);
     let listing = await fs.promises.readdir(logDir)
         .catch(e => e.code=="ENOENT" ? null : e);
     // console.log("listing", listing);
     if (listing instanceof Array) {
         await listing.forEachAsync(async entry => {
-            let [_, yearStr, monthStr] = dirSplit.exec(entry);
-            let dirDate = parseInt(yearStr + monthStr);
-            let dateLine = dirDate - 3;
+            let [_, yearStr, monthStr, dayStr] = dirSplit.exec(entry);
+            let dirDate = parseInt(yearStr + monthStr + dayStr);
+            let dateLine = todayDate - 3;
             // console.log("run date", runDate, "dirDate", dirDate, "date line", dateLine);
-            if (dirDate - 3 < dateLine) {
+            if (dirDate <= dateLine) {
                 console.log(runDate, "old directory", entry, "to be removed");
 
                 let fileName = path.join(logDir, entry);
