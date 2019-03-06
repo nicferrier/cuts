@@ -79,9 +79,10 @@ exports.commonyQueue = async function(logDir, runDate, app) {
         let script = app.commands[dirName];
         console.log("run ", runDate, "doing ", script);
         let child = spawn(shell, ["-c", script]);
-        child.stderr.pipe(out);
+        // child.stderr.pipe(out);
         child.stdout.pipe(out);
-        let scriptEnd = proc => child.on("exit", proc);
+        child.on("error", err=>console.log);
+        let scriptEnd = proc => child.on("close", proc);
         await eventToHappen(scriptEnd);
         out.end();
     });
