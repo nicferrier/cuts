@@ -26,7 +26,6 @@ exports.commonyQueue = async function(logDir, runDate, app) {
     let runDateStr = path.join(
         logDir,
         yearMonthDayStr,
-        "" + runDate.getDate(),
         ("0" + runDate.getHours()).substr(-2)
         + ("0" + runDate.getMinutes()).substr(-2),
         "placeholder"
@@ -34,7 +33,9 @@ exports.commonyQueue = async function(logDir, runDate, app) {
 
     // console.log("runDateStr", runDateStr);
 
-    let todayDate = parseInt(yearMonthDayStr);
+    let todayDate = runDate.getFullYear()
+        + ("0" + (runDate.getMonth() + 1)).substr(-2)
+        + ("0" + (runDate.getDate())).substr(-2);
     let listing = await fs.promises.readdir(logDir)
         .catch(e => e.code=="ENOENT" ? null : e);
     // console.log("listing", listing);
@@ -42,7 +43,7 @@ exports.commonyQueue = async function(logDir, runDate, app) {
         await listing.forEachAsync(async entry => {
             let [_, yearStr, monthStr, dayStr] = dirSplit.exec(entry);
             let dirDate = parseInt(yearStr + monthStr + dayStr);
-            let dateLine = todayDate - 3;
+            let dateLine = parseInt(todayDate - 3);
             // console.log("run date", runDate, "dirDate", dirDate, "date line", dateLine);
             if (dirDate <= dateLine) {
                 console.log(runDate, "old directory", entry, "to be removed");
